@@ -1,0 +1,16 @@
+\contentsline {section}{\numberline {1}Introduction}{1}{section.1}
+\contentsline {section}{\numberline {2}Getting started}{2}{section.2}
+\contentsline {subsection}{\numberline {2.1}Installation}{2}{subsection.2.1}
+\contentsline {subsection}{\numberline {2.2}Building a \texttt {TxDb} of your genome }{2}{subsection.2.2}
+\contentsline {section}{\numberline {3}Running \texttt {ASpli}}{2}{section.3}
+\contentsline {subsection}{\numberline {3.1}To BIN or not to BIN}{2}{subsection.3.1}
+\contentsline {subsection}{\numberline {3.2}Read Counting}{4}{subsection.3.2}
+\contentsline {subsubsection}{\numberline {3.2.1}Mapping file and bam loading}{4}{subsubsection.3.2.1}
+\contentsline {subsubsection}{\numberline {3.2.2}Overlap features and read alignments}{4}{subsubsection.3.2.2}
+\contentsline {subsection}{\numberline {3.3}Alternative splicing analysis and discovery using junction}{5}{subsection.3.3}
+\contentsline {subsection}{\numberline {3.4}Estimating differential gene expression and bin/junction usage}{6}{subsection.3.4}
+\contentsline {subsubsection}{\numberline {3.4.1}Differential gene expression (DE)}{6}{subsubsection.3.4.1}
+\contentsline {subsubsection}{\numberline {3.4.2}Differential junctions and bin usage (DU)}{7}{subsubsection.3.4.2}
+\contentsline {subsection}{\numberline {3.5}Output and results}{7}{subsection.3.5}
+\contentsline {subsection}{\numberline {3.6}Plots}{8}{subsection.3.6}
+\contentsline {section}{\numberline {4}Example data}{9}{section.4}

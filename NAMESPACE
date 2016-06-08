@@ -1,0 +1,48 @@
+exportPattern("^[[:alpha:]]+")
+import(methods)
+import(BiocGenerics)
+import(IRanges)
+import(GenomicRanges)
+import(GenomicFeatures)
+import(edgeR)
+import(GenomicAlignments)
+import(DEXSeq)
+importFrom("grDevices", "dev.off", "png")
+importFrom("stats", "aggregate", "formula", "p.adjust")
+importFrom("utils", "head", "write.table")
+exportMethods(
+    "AsDiscover",
+    "binGenome",
+    "DUreport",
+    "writeAS",
+    "writeCounts",
+    "writeDU",
+    "writeRds",
+    "rds",
+    "readCounts",
+    "featuresg",
+    "featuresb",
+    "featuresj",
+    "countsg",
+    "countsb",
+    "countsj",
+    "countse1i",
+    "countsie2",
+    "rdsg",
+    "rdsb",
+    "irPIR",
+    "altPSI",
+    "esPSI",
+    "junctionsPIR",
+    "junctionsPSI",
+    "genesDE",
+    "binsDU",
+    "junctionsDU",
+    "DUreport_DEXSeq"
+)
+exportClasses(
+    "ASpli-AS",
+     "ASpli-counts",
+     "ASpli-DU",
+     "ASpli-features" 
+)
