@@ -37,6 +37,7 @@ Bins and junctions are labelled always in  5' to 3' sense. This notation is stra
 \author{Estefania Mancini, Marcelo Yanovsky, Ariel Chernomoretz }
 
 \examples{
+\dontrun{
 library(ASpli)
 chr14 <- system.file("extdata","chr14.sqlite", package="ASpli")
 genome<-loadDb(chr14)
@@ -50,6 +51,7 @@ JunctionRanges<-featuresj(features)
 \link{featuresg}
 \link{featuresb}
 \link{featuresj}
+}
 }
 }
 
