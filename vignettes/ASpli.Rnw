@@ -426,61 +426,67 @@ chr14 <- system.file("extdata","chr14.sqlite", package="ASpli")
 @
 
 And now we can perform the complete analysis.
-<<loadDb, echo=TRUE, eval=FALSE>>=
+<<loadDb, echo=TRUE, eval=TRUE>>=
 genome<-loadDb(chr14)
 features<-binGenome(genome) 
 @
 
 Create targets object using the information of the available files:
-<<targetsEx, echo=TRUE, eval=FALSE>>=
+<<targetsEx, echo=TRUE, eval=TRUE>>=
 targets <- data.frame(row.names=names(RNAseqData.HNRNPC.bam.chr14_BAMFILES),
                       bam=matrix(unlist(RNAseqData.HNRNPC.bam.chr14_BAMFILES), ncol = 1, byrow = TRUE), 
                       condition=c(rep("CT",4),rep("KD",4)))
 @
 Load bam files:
-<<loadBam, echo=TRUE, eval=FALSE>>=
+<<loadBam, echo=TRUE, eval=TRUE>>=
 bam<-loadBAM(targets)
 @
 Overlap alignments against features:
-<<todosJuntos, eval=FALSE>>=
+<<todosJuntos, eval=TRUE>>=
 counts<-readCounts(features, bam, l=100L, maxISize=50000)
 @
 Perform DE/DU analysis
-<<DU, eval=FALSE>>=
+<<DU, eval=TRUE>>=
 pair<-c("CT","KD")
 group<-c(rep("CT", 4),rep("KD", 4))
 du_HNRNPC<-DUreport(counts, targets, pair, group)  
 @
 Analyze AS using junctions:
-<<AS, eval=FALSE>>=
+<<AS, eval=TRUE>>=
 as_HNRNPC<-AsDiscover(counts=counts, targets=targets, features=features, bam=bam, l=100L, pair=pair)
 @
 
 Select TopTags (only using DU information:)
-<<topTags, echo=TRUE, eval=FALSE>>=
+<<topTags, echo=TRUE, eval=TRUE>>=
 binsdu<-binsDU(du_HNRNPC)
 topTagsBins<-which(binsdu$bin.fdr <= 0.1 & 
                        abs(binsdu$logFC) >=0.58)
-write.table(binsdu[topTagsBins,], file="topTagsBins.tab", sep="\t")
 @
 
 We can inspect visually the results of topTags. Sometimes is useful to merge BAM files by conditions. \textit{(In this example data, control and knock down replicates were  merged using \texttt{samtools merge} into \textbf{CT.bam} and \textbf{KD.bam} respectively)}. Before plotting it is mandatory to install and load \texttt{Gviz} package.
 
-<<targetsPlot, eval=FALSE>>=
-library(Gviz)
-targetsPlot<-data.frame(bam=c("CT.bam","KD.bam"), 
-                          sample=c("ct", "kd"), 
-                        color=c("blue", "black"), 
+<<targetsPlot, eval=TRUE>>=
+targetsPlot<-data.frame(bam=targets$bam, 
+                        sample=group<-c(rep("CT", 4),rep("KD", 4)), 
+                        color=group<-c(rep("blue", 4),rep("red", 4)), 
                         stringsAsFactors=FALSE)
 @
 
-<<auxdf, echo=TRUE, eval=FALSE>>=
-auxdf<-binsdu[head(topTagsBins),]
-plotTopTags(auxdf, 
+<<auxdf, echo=TRUE, eval=TRUE>>=
+library(Gviz)
+auxdf<-binsdu[topTagsBins,]
+#for simplicity, we choose one: LRR1:E005
+plotTopTags(auxdf["LRR1:E005",], 
             genome, 
             targetsPlot, 
-            output.dir="example_plots")
+            output.dir="testPlots")
 @
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=0.5\textwidth]{testPlots/LRR1_E005.png}
+\caption{Plot of LRR1:E005 Exon Skipping}
+\end{figure}
+
 
 Check overlap between default DUreport (using gene expression correction and edgeR) and DU\_report using DEXSeq:
 \begin{figure}[ht!]
@@ -507,8 +513,6 @@ vennDiagram(auxdf)
 <<sessionInfo, eval=TRUE, echo=TRUE>>=
 sessionInfo()
 @
-
-
 
 \bibliography{ASpli}
 \end{document}
