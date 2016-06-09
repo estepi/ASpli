@@ -46,12 +46,5 @@ GeneRanges<-featuresg(features)
 BinRanges<-featuresb(features)
 JunctionRanges<-featuresj(features)
 }
-\seealso{
-\code{ 
-\link{featuresg}
-\link{featuresb}
-\link{featuresj}
-}
-}
-}
+\seealso{ \code{ \link{featuresg} \link{featuresb} \link{featuresj} } }
 
