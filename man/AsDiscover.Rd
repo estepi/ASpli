@@ -64,7 +64,6 @@ Estefania Mancini, Marcelo Yanovsky and Ariel Chernomoretz
 }
 
 \examples{
-\dontrun{ 
 library(ASpli)
 library(RNAseqData.HNRNPC.bam.chr14)
 chr14 <- system.file("extdata","chr14.sqlite", package="ASpli")
@@ -79,7 +78,7 @@ group=factor(c(rep("CT",4),rep("KD",4)))
 pair<-c("CT","KD")  
 as<-AsDiscover(counts, targets, features, bam, l=100L, pair=pair)
 writeAS(as=as, output.dir="only_as")
-} 
+ 
 }
 
 \seealso{

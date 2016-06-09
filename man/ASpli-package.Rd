@@ -36,7 +36,6 @@ Estefania Mancini, Marcelo Yanovsky and Ariel Chernomoretz
 }
 }
 \examples{ 
-\dontrun{ 
 library(RNAseqData.HNRNPC.bam.chr14)
 library(ASpli)
 chr14 <- system.file("extdata","chr14.sqlite", package="ASpli")
@@ -47,13 +46,13 @@ targets <- data.frame(row.names=names(RNAseqData.HNRNPC.bam.chr14_BAMFILES),
                                  ncol = 1, byrow = TRUE), 
                       condition=c(rep("CT",4),rep("KD",4)))
 bam<-loadBAM(targets, cores=8)
-counts<-readCounts(features, bam,  l=100L, maxISize=5000);
-writeCounts(counts, "test")
+counts<-readCounts(features, bam,  l=100L, maxISize=50000);
+#writeCounts(counts, "test")
 group<-factor(c(rep("CT",4),rep("KD",4)))
 pair<-c("CT","KD")  
 du<-DUreport(counts, targets, pair, group)
 as<-AsDiscover(counts, targets, features, bam, threshold=5, l=100, pair=pair)
-}
+
 } 
 
 \keyword{ alternative splicing, RNA-seq, junctions }

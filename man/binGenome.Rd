@@ -36,8 +36,12 @@ Bins and junctions are labelled always in  5' to 3' sense. This notation is stra
 \references{ \code{\link{TxDb} }  }
 \author{Estefania Mancini, Marcelo Yanovsky, Ariel Chernomoretz }
 
+\seealso{ \code{
+\link{featuresg}, \link{featuresb} , \link{featuresj} 
+} 
+}
+
 \examples{
-\dontrun{
 library(ASpli)
 chr14 <- system.file("extdata","chr14.sqlite", package="ASpli")
 genome<-loadDb(chr14)
@@ -45,6 +49,6 @@ features<-binGenome(genome)
 GeneRanges<-featuresg(features)
 BinRanges<-featuresb(features)
 JunctionRanges<-featuresj(features)
-}
-\seealso{ \code{ \link{featuresg} \link{featuresb} \link{featuresj} } }
+} 
+
 

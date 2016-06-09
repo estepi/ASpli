@@ -37,7 +37,7 @@ Accesors: \link{countsg},
 \link{countsb}, \link{countsj},\link{countse1i}, \link{countsie2},\link{rdsg},\link{rdsb} Export: \link{writeCounts}}
 }
 \examples{
-\dontrun{ 
+library(ASpli)
 library(RNAseqData.HNRNPC.bam.chr14)
 chr14 <- system.file("extdata","chr14.sqlite", package="ASpli")
 genome<-loadDb(chr14)
@@ -49,5 +49,5 @@ targets <- data.frame(row.names=names(RNAseqData.HNRNPC.bam.chr14_BAMFILES),
 bam<-loadBAM(targets, cores=8)
 counts<-readCounts(features, bam, l=100L, maxISize=50000)#OK
 writeCounts(counts,output.dir="only_counts")
-}
+
 }

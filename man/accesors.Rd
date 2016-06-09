@@ -52,4 +52,13 @@ Accessors for ASpli objects for every feature
 }
 \details{ Extract dataframes from ASpli objects }
 \author{ Estefania Mancini, Marcelo Yanovsky, Ariel Chernomoretz  }
+\examples{
+library(ASpli)
+chr14 <- system.file("extdata","chr14.sqlite", package="ASpli")
+genome<-loadDb(chr14)
+features<-binGenome(genome)
+GeneRanges<-featuresg(features)
+BinRanges<-featuresb(features)
+JunctionRanges<-featuresj(features)
+}
 

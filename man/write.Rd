@@ -37,3 +37,5 @@ Tab delimited files are exported in a tidy manner into output folder
 \author{
 Estefania Mancini, Marcelo Yanovsky, Ariel Chernomoretz 
 }
+\seealso{
+\code{ \link{AsDiscover}, \link{binGenome},\link{DUreport}}}

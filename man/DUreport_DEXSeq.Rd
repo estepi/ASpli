@@ -1,14 +1,14 @@
-\name{DUreport}
-\alias{DUreport}
+\name{DUreport_DEXSeq}
+\alias{DUreport_DEXSeq}
 
 \title{
-Differential gene expression and differential bin/junction usage estimation
+Differential gene expression and differential bin/junction usage estimation using DEXSeq 
 }
 \description{
-Estimate differential expression at gene level and differential usage at bin and junction level.
+Estimate differential expression at gene level and differential usage at bin and junction level using DEXSeq statistical method
 }
 \usage{
-DUreport(counts, targets, pair, group, minGenReads, minBinReads, minRds,ignoreExternal,threshold)
+DUreport_DEXSeq(counts, targets, pair, group, minGenReads, minBinReads, minRds,ignoreExternal,threshold)
 }
 
 \arguments{
@@ -48,12 +48,13 @@ counts<-readCounts(features, bam, cores=8, l=100L, maxISize=50000)
 group<-factor(c(rep("CT",4), 
                 rep("KD",4)))
 pair<-c("CT","KD")  
-du<-DUreport(counts, targets, pair, group)
+du<-DUreport_DEXSeq(counts, targets, pair, group)
 writeDU(du, output.dir="only_du")
+ 
 }
 \seealso{
 \code{
-\link{DUreport_DEXseq}, \link{DEXSeq}, \link{edgeR}
+\link{DUreport}, \link{DEXSeq}, \link{edgeR}
 Accesors: \link{genesDE}, \link{binsDU},\link{junctionsDU}
 Export: \link{writeDU}
 }
