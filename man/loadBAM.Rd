@@ -26,5 +26,5 @@ targets <- data.frame(row.names=names(RNAseqData.HNRNPC.bam.chr14_BAMFILES),
                       bam=matrix(unlist(RNAseqData.HNRNPC.bam.chr14_BAMFILES), ncol = 1, byrow = TRUE), 
                       condition=c(rep("CT",4),rep("KD",4)))
 targets
-bam<-loadBAM(targets, cores=8)
+bam<-loadBAM(targets)
 }
