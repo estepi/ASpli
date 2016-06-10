@@ -422,42 +422,42 @@ It is possible to run a demo of ASpli using public RNA-seq data available via Bi
 <<librariesEx, echo=TRUE, eval=TRUE>>=
 library(ASpli)
 library(RNAseqData.HNRNPC.bam.chr14)
-chr14 <- system.file("extdata","chr14.sqlite", package="ASpli")
 @
 
 And now we can perform the complete analysis.
-<<loadDb, echo=TRUE, eval=TRUE>>=
+<<loadDb, echo=TRUE, eval=FALSE>>=
+chr14 <- system.file("extdata","chr14.sqlite", package="ASpli")
 genome<-loadDb(chr14)
 features<-binGenome(genome) 
 @
 
 Create targets object using the information of the available files:
-<<targetsEx, echo=TRUE, eval=TRUE>>=
+<<targetsEx, echo=TRUE, eval=FALSE>>=
 targets <- data.frame(row.names=names(RNAseqData.HNRNPC.bam.chr14_BAMFILES),
                       bam=matrix(unlist(RNAseqData.HNRNPC.bam.chr14_BAMFILES), ncol = 1, byrow = TRUE), 
                       condition=c(rep("CT",4),rep("KD",4)))
 @
 Load bam files:
-<<loadBam, echo=TRUE, eval=TRUE>>=
+<<loadBam, echo=TRUE, eval=FALSE>>=
 bam<-loadBAM(targets)
 @
 Overlap alignments against features:
-<<todosJuntos, eval=TRUE>>=
+<<todosJuntos, eval=FALSE>>=
 counts<-readCounts(features, bam, l=100L, maxISize=50000)
 @
 Perform DE/DU analysis
-<<DU, eval=TRUE>>=
+<<DU, eval=FALSE>>=
 pair<-c("CT","KD")
 group<-c(rep("CT", 4),rep("KD", 4))
 du_HNRNPC<-DUreport(counts, targets, pair, group)  
 @
 Analyze AS using junctions:
-<<AS, eval=TRUE>>=
+<<AS, eval=FALSE>>=
 as_HNRNPC<-AsDiscover(counts=counts, targets=targets, features=features, bam=bam, l=100L, pair=pair)
 @
 
 Select TopTags (only using DU information:)
-<<topTags, echo=TRUE, eval=TRUE>>=
+<<topTags, echo=TRUE, eval=FALSE>>=
 binsdu<-binsDU(du_HNRNPC)
 topTagsBins<-which(binsdu$bin.fdr <= 0.1 & 
                        abs(binsdu$logFC) >=0.58)
@@ -465,14 +465,14 @@ topTagsBins<-which(binsdu$bin.fdr <= 0.1 &
 
 We can inspect visually the results of topTags. Sometimes is useful to merge BAM files by conditions. \textit{(In this example data, control and knock down replicates were  merged using \texttt{samtools merge} into \textbf{CT.bam} and \textbf{KD.bam} respectively)}. Before plotting it is mandatory to install and load \texttt{Gviz} package.
 
-<<targetsPlot, eval=TRUE>>=
+<<targetsPlot, eval=FALSE>>=
 targetsPlot<-data.frame(bam=targets$bam, 
                         sample=group<-c(rep("CT", 4),rep("KD", 4)), 
                         color=group<-c(rep("blue", 4),rep("red", 4)), 
                         stringsAsFactors=FALSE)
 @
 
-<<auxdf, echo=TRUE, eval=TRUE>>=
+<<auxdf, echo=TRUE, eval=FALSE>>=
 library(Gviz)
 auxdf<-binsdu[topTagsBins,]
 #for simplicity, we choose one: LRR1:E005
@@ -483,7 +483,7 @@ plotTopTags(auxdf["LRR1:E005",],
 @
 \begin{figure}[ht!]
 \centering
-\includegraphics[width=0.5\textwidth]{testPlots/LRR1_E005.png}
+\includegraphics[width=0.5\textwidth]{LRR1_E005.png}
 \caption{Plot of LRR1:E005 Exon Skipping}
 \end{figure}
 
