@@ -1,5 +1,7 @@
 \name{DUreport_DEXSeq}
 \alias{DUreport_DEXSeq}
+  
+
 
 \title{
 Differential gene expression and differential bin/junction usage estimation using DEXSeq 
@@ -8,7 +10,8 @@ Differential gene expression and differential bin/junction usage estimation usin
 Estimate differential expression at gene level and differential usage at bin and junction level using DEXSeq statistical method
 }
 \usage{
-DUreport_DEXSeq(counts, targets, pair, group, minGenReads, minBinReads, minRds,ignoreExternal,threshold)
+DUreport_DEXSeq(counts, targets, pair, group, minGenReads, 
+minBinReads, minRds,threshold)
 }
 
 \arguments{
@@ -25,7 +28,6 @@ vector of length two, either numeric or character, providing the pair of groups 
 \item{minGenReads}{Default 10 reads}
 \item{minBinReads}{Default 5 reads}
 \item{minRds}{Default 0.05}
-\item{ignoreExternal}{Ignore Exon Bins at the beggining or end of the transcript. Default TRUE}
 \item{threshold}{Minimun number of junction. Default 5}
 }
 
@@ -34,7 +36,6 @@ vector of length two, either numeric or character, providing the pair of groups 
 Estefania Mancini, Marcelo Yanovsky, Ariel Chernomoretz
 }
 \examples{
-library(ASpli)
 library(RNAseqData.HNRNPC.bam.chr14)
 chr14 <- system.file("extdata","chr14.sqlite", package="ASpli")
 genome<-loadDb(chr14)

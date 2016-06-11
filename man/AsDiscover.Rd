@@ -8,14 +8,16 @@ Report PSI and PIR using experimental junctions
 Given a bin, it is possible to calculate PSI/PIR metric using junctions to estimate changes in the use of it along different conditions.
 }
 
-
+ 
 \usage{
 AsDiscover(counts, 
           targets, 
           features, 
           bam, 
           l,
-          pair)
+          pair,
+          threshold, 
+          cores)
 }
 \arguments{
 \item{counts}{
@@ -36,6 +38,14 @@ Read length of sequenced read. Default 100L
 \item{pair}{
 Vector of length two, either numeric or character, providing the pair of groups to be compared
 }
+
+\item{threshold}{
+Minimun  number of reads supporting junctions. Default=5
+}
+\item{cores}{
+Number of proccesors to use
+}
+
 }
 \value{
 An object of class ASpli-AS 
@@ -64,7 +74,6 @@ Estefania Mancini, Marcelo Yanovsky and Ariel Chernomoretz
 }
 
 \examples{
-library(ASpli)
 library(RNAseqData.HNRNPC.bam.chr14)
 chr14 <- system.file("extdata","chr14.sqlite", package="ASpli")
 genome<-loadDb(chr14)

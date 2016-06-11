@@ -7,7 +7,7 @@ Load BAM files
 \description{
 Load BAM files into R session using targets object especification 
 }
-\usage{loadBAM(targets, cores = NULL)}
+\usage{loadBAM(targets, cores)}
 \arguments{
 \item{targets}{A dataframe containing sample, bam and condition columns }
  \item{cores}{Number of proccesors to use}

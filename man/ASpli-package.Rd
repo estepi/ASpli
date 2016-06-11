@@ -37,7 +37,6 @@ Estefania Mancini, Marcelo Yanovsky and Ariel Chernomoretz
 }
 \examples{ 
 library(RNAseqData.HNRNPC.bam.chr14)
-library(ASpli)
 chr14 <- system.file("extdata","chr14.sqlite", package="ASpli")
 genome<-loadDb(chr14)
 features<-binGenome(genome)

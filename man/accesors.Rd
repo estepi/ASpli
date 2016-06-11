@@ -12,12 +12,12 @@
 \alias{irPIR}
 \alias{altPSI}
 \alias{esPSI}
-\alias{joint}
 \alias{junctionsPIR}
 \alias{junctionsPSI}
 \alias{genesDE}
 \alias{binsDU}
 \alias{junctionsDU}
+\alias{joint}
 \title{
 Accessors for ASpli objects for every feature
 }
@@ -38,11 +38,12 @@ Accessors for ASpli objects for every feature
   JunctionsEsPSI<-esPSI(as)
   junctionsPIR<-junctionsPIR(as)
   junctionsPSI<-junctionsPSI(as)
+  asJoint<-joint(as)
   genesDE<-genesDE(du)
   binsDU<-binsDU(du)
   junctionsDU<-junctionsDU(du)
-  binJoin<-joint(du)
-}
+  
+ }
 
 \arguments{
   \item{features}{ An ASpli-features object }
@@ -53,7 +54,6 @@ Accessors for ASpli objects for every feature
 \details{ Extract dataframes from ASpli objects }
 \author{ Estefania Mancini, Marcelo Yanovsky, Ariel Chernomoretz  }
 \examples{
-library(ASpli)
 chr14 <- system.file("extdata","chr14.sqlite", package="ASpli")
 genome<-loadDb(chr14)
 features<-binGenome(genome)

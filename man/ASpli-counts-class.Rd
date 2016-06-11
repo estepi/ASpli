@@ -1,0 +1,30 @@
+\name{ASpli-counts-class}
+\Rdversion{1.1}
+\docType{class}
+\alias{ASpli-counts-class}
+\alias{AsDiscover,ASpli-counts-method}
+\alias{countsb,ASpli-counts-method}
+\alias{countse1i,ASpli-counts-method}
+\alias{countsg,ASpli-counts-method}
+\alias{countsie2,ASpli-counts-method}
+\alias{countsj,ASpli-counts-method}
+\alias{DUreport,ASpli-counts-method}
+\alias{rds,ASpli-counts-method}
+\alias{rdsb,ASpli-counts-method}
+\alias{rdsg,ASpli-counts-method}
+\alias{writeCounts,ASpli-counts-method}
+\alias{writeRds,ASpli-counts-method}
+\description{}
+\title{Class \code{"ASpli-counts"}}
+\section{Slots}{
+  \describe{
+    \item{\code{gene.counts}}{}
+    \item{\code{exon.intron.counts}}{}
+    \item{\code{junction.counts}}{}
+    \item{\code{e1i.counts}}{}
+    \item{\code{ie2.counts}}{}
+    \item{\code{gene.rd}}{}
+    \item{\code{bin.rd}}{}
+  }
+}
+\author{ Estefania Mancini, Marcelo Yanovsky, Ariel Chernomoretz}

@@ -7,10 +7,10 @@ import(GenomicFeatures)
 import(edgeR)
 import(GenomicAlignments)
 import(DEXSeq)
-import(Gviz)
 importFrom("grDevices", "dev.off", "png")
 importFrom("stats", "aggregate", "formula", "p.adjust")
 importFrom("utils", "head", "write.table")
+import(Gviz)
 exportMethods(
     "AsDiscover",
     "binGenome",

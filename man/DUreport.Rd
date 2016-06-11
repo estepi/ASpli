@@ -34,7 +34,6 @@ vector of length two, either numeric or character, providing the pair of groups 
 Estefania Mancini, Marcelo Yanovsky, Ariel Chernomoretz
 }
 \examples{
-library(ASpli)
 library(RNAseqData.HNRNPC.bam.chr14)
 chr14 <- system.file("extdata","chr14.sqlite", package="ASpli")
 genome<-loadDb(chr14)
@@ -53,7 +52,7 @@ writeDU(du, output.dir="only_du")
 }
 \seealso{
 \code{
-\link{DUreport_DEXseq}, \link{DEXSeq}, \link{edgeR}
+\link{DUreport_DEXSeq}, \link{DEXSeq}, \link{edgeR}
 Accesors: \link{genesDE}, \link{binsDU},\link{junctionsDU}
 Export: \link{writeDU}
 }

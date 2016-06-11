@@ -30,8 +30,6 @@ Estefania Mancini, Marcelo Yanovsky, Ariel Chernomoretz
 }
 
 \examples{
-library(Gviz)
-library(ASpli)
 library(RNAseqData.HNRNPC.bam.chr14)
 chr14 <- system.file("extdata","chr14.sqlite", package="ASpli")
 genome<-loadDb(chr14)

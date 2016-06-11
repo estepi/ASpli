@@ -5,10 +5,8 @@ Summarize read overlaps
 }
 \description{
 Summarize read overlaps against all feature levels }
-
-  
 \usage{
-readCounts(features, bam, l, maxISize)
+readCounts(features, bam, cores, l, maxISize, minAnchor)
 }
 \arguments{
 \item{features}{
@@ -21,6 +19,8 @@ List of bam files
 Read length of sequenced library. It is used for compute E1I and IE2 read summarization
 }
 \item{maxISize}{maximum intron expected size. Junctions longer than this size will be dicarded  }
+\item{cores}{Number of cores to use. Default 1}
+\item{minAnchor}{ Percentage of read thath sould be aligned in exon-intron boundary  }
 }
 
 \value{
@@ -37,7 +37,6 @@ Accesors: \link{countsg},
 \link{countsb}, \link{countsj},\link{countse1i}, \link{countsie2},\link{rdsg},\link{rdsb} Export: \link{writeCounts}}
 }
 \examples{
-library(ASpli)
 library(RNAseqData.HNRNPC.bam.chr14)
 chr14 <- system.file("extdata","chr14.sqlite", package="ASpli")
 genome<-loadDb(chr14)
