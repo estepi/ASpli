@@ -51,7 +51,5 @@ group<-factor(c(rep("CT",4),rep("KD",4)))
 pair<-c("CT","KD")  
 du<-DUreport(counts, targets, pair, group)
 as<-AsDiscover(counts, targets, features, bam, threshold=5, l=100, pair=pair)
-
-} 
-
+}
 \keyword{ alternative splicing, RNA-seq, junctions }

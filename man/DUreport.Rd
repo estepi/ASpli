@@ -1,6 +1,5 @@
 \name{DUreport}
 \alias{DUreport}
-
 \title{
 Differential gene expression and differential bin/junction usage estimation
 }
@@ -30,6 +29,7 @@ vector of length two, either numeric or character, providing the pair of groups 
 }
 
 
+\value{ An ASpli-DU object with results at \code{genes}, \code{bins} and \code{junctions} level }
 \author{
 Estefania Mancini, Marcelo Yanovsky, Ariel Chernomoretz
 }
@@ -52,9 +52,10 @@ writeDU(du, output.dir="only_du")
 }
 \seealso{
 \code{
-\link{DUreport_DEXSeq}, \link{DEXSeq}, \link{edgeR}
+\link{DEXSeq}, \link{edgeR}
 Accesors: \link{genesDE}, \link{binsDU},\link{junctionsDU}
 Export: \link{writeDU}
 }
 }
+
 

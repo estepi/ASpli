@@ -1,13 +1,11 @@
 \name{binGenome}
 \alias{binGenome}
-
 \title{ Feature coordinates extraction }
 \description{ 
 Exons and introns are subdivided into new features called exon and intron bins and are then classified into exclusively exonic bins, exclusively intronic bins or alternative splicing (AS) bins .
 }
 
 \usage{ binGenome(genome, md = NULL) }
-
 \arguments{   \item{genome}{ An object of class transcriptDb (TxDb)   }
 \item{md}{ A dataframe with symbol (common names) of TxDb genes. If there isn't md file, gene name will be repeated }}
 \details{ 
@@ -32,12 +30,8 @@ Bins and junctions are labelled always in  5' to 3' sense. This notation is stra
 
 
 \value{ An ASpli-features object. It is  a list of features using GRanges format. }
-
-\references{ \code{\link{TxDb} }  }
 \author{Estefania Mancini, Marcelo Yanovsky, Ariel Chernomoretz }
-
-\seealso{ \code{
-\link{featuresg}, \link{featuresb} , \link{featuresj} 
+\seealso{ \code{\link{featuresg}, \link{featuresb} , \link{featuresj} 
 } 
 }
 

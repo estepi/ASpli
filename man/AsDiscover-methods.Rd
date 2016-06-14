@@ -87,7 +87,6 @@ group=factor(c(rep("CT",4),rep("KD",4)))
 pair<-c("CT","KD")  
 as<-AsDiscover(counts, targets, features, bam, l=100L, pair=pair)
 writeAS(as=as, output.dir="only_as")
- 
 }
 
 \seealso{

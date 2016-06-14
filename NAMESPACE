@@ -15,6 +15,7 @@ exportMethods(
     "AsDiscover",
     "binGenome",
     "DUreport",
+    "DUreport_DEXSeq",
     "writeAS",
     "writeCounts",
     "writeDU",
@@ -34,12 +35,12 @@ exportMethods(
     "irPIR",
     "altPSI",
     "esPSI",
+     "joint",
     "junctionsPIR",
     "junctionsPSI",
     "genesDE",
     "binsDU",
-    "junctionsDU",
-    "DUreport_DEXSeq"
+    "junctionsDU"
 )
 exportClasses(
     "ASpli-AS",

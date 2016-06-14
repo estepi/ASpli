@@ -44,9 +44,7 @@ setMethod(
   f= "binGenome",
   signature= "TxDb",
   definition=function (genome,md=NULL){
-    
     features<-new(Class="ASpli-features")
-    
     if (is.null(md))
     {
       md<-data.frame(names(transcriptsBy(genome)), 
@@ -573,6 +571,15 @@ setGeneric (
                threshold=NULL)
   {standardGeneric("DUreport")})
 ##########################################################################
+setGeneric (
+  name= "DUreport_DEXSeq",
+  def=function(counts, targets, pair, group,
+               minGenReads=NULL,
+               minBinReads=NULL,
+               minRds=NULL,
+               threshold=NULL)
+  {standardGeneric("DUreport_DEXSeq")})
+##########################################################################
 setMethod(
   f= "DUreport",
   signature= "ASpli-counts",
@@ -650,6 +657,76 @@ du@junctions<-junctionsdeSUM
 message("Junctions DU completed")
 return(du)
 }
+)
+#########################################################################
+setMethod(
+  f= "DUreport_DEXSeq",
+  signature= "ASpli-counts",
+  definition=function(counts, targets, pair, group, 
+                      minGenReads=NULL,
+                      minBinReads=NULL,
+                      minRds=NULL,
+                      threshold=NULL)
+  {
+    du<-new(Class="ASpli-DU")
+    #define parameters#
+    if(is.null(minGenReads)){minGenReads=10}
+    if(is.null(minBinReads)){minBinReads=5}
+    if(is.null(minRds)){minRds=0.05}
+    if(is.null(threshold)){threshold=5}
+    ###############################################
+    df0<-countsg(counts)
+    dfG0<-.filterByReads(df0=df0,
+                         targets=targets,
+                         min=minGenReads,
+                         type="any")
+    dfGen<-.filterByRdGen(df0=dfG0,
+                          targets=targets,
+                          min=minRds,
+                          type="any")
+    genesde<-.genesDE_DESeq(df=dfGen, 
+                            targets=targets, 
+                            pair=pair) 
+    du@genes<-genesde #idem ???
+    ###############################################################
+    dfG0<-.filterByReads(df0=df0,
+                         targets=targets,
+                         min=minGenReads,
+                         type="all")
+    dfGen<-.filterByRdGen(df0=dfG0,
+                          targets=targets,
+                          min=minRds,
+                          type="all")
+    
+    dfBin<-countsb(counts)[countsb(counts)[,"locus"]%in%row.names(dfGen),]
+    df1<-.filterByReads(df0=dfBin,
+                        targets=targets, 
+                        min=minBinReads,
+                        type="any")
+    df2<-.filterByRdBinRATIO(
+      dfBin=df1,
+      dfGen=dfGen,
+      targets=targets, 
+      min=minRds,
+      type="any")
+    #bins con AS en binsN
+    binsdu<-.binsDU_DEXSeq(df=df2,
+                           targets=targets,
+                           group=group) 
+    du@bins<-binsdu
+    ########################################################################
+    df0<-countsj(counts)[countsj(counts)[,"gene"]%in%rownames(dfGen),]
+    df<-.filterJunctionBySample(df0=df0, 
+                                targets=targets, 
+                                threshold=threshold)  #mean > one of the condition
+    df<-df[df$multipleHit=="-",]
+    junctionsdeSUM<-.junctionsDU_SUM_DEXSeq(df,
+                                            targets=targets, 
+                                            genesde=genesde,
+                                            group=group)
+    du@junctions<-junctionsdeSUM
+    return(du)
+  }
 )
 ##########################################################################
 setGeneric (

@@ -48,5 +48,5 @@ targets <- data.frame(row.names=names(RNAseqData.HNRNPC.bam.chr14_BAMFILES),
 bam<-loadBAM(targets)
 counts<-readCounts(features, bam, l=100L, maxISize=50000)#OK
 writeCounts(counts,output.dir="only_counts")
-
 }
+

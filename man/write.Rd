@@ -1,6 +1,6 @@
-\name{write}
-\alias{writeCounts}
+\name{writeRds}
 \alias{writeRds}
+\alias{writeCounts}
 \alias{writeAS}
 \alias{writeDU}
 \alias{writeAll}

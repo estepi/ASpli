@@ -7,7 +7,8 @@
 \alias{junctionsDU,ASpli-DU-method}
 \alias{writeDU,ASpli-DU-method}
 \title{Class \code{"ASpli-DU"}}
-\description{}
+\description{Contains results of differential expression at gene level and differential usage at bin and junction level estimation using DEreport method.
+}
 \section{Slots}{
   \describe{
     \item{\code{genes}}{}

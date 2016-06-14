@@ -7,7 +7,7 @@
 \alias{featuresj,ASpli-features-method}
 \alias{readCounts,ASpli-features-method}
 \title{Class \code{"ASpli-features"}}
-\description{}
+\description{Contains Genomic Ranges of different features extracted from a     TxDb}
 \section{Slots}{
 \describe{
     \item{\code{genes}:}{}
