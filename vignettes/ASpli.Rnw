@@ -4,10 +4,6 @@
 \documentclass{article}
 <<style, echo=FALSE, results=tex>>=
 BiocStyle::latex()
-@
-
-
-<<echo=false>>=
 options(continue=" ")
 @
 
@@ -40,14 +36,7 @@ ASpli can be installed locally from the command line:
 R CMD INSTALL ASpli_0.99.0.tar.gz
 \end{verbatim}
 
-Or by using bioconductor:
 
-<<makeTx, echo=TRUE, eval=FALSE>>=
-source("https://bioconductor.org/biocLite.R")
-biocLite("ASpli")
-@
-
-  
 \subsection{Building a \texttt{TxDb} of your genome }
 Gene annotation is handled using \texttt{TxDb} objects. The building of a \texttt{TxDb} object might be time consuming, depending on the size of your genome. If a \texttt{TxDb} has been already created, we strongly recommend  saving it as a \texttt{sqlite} file and reloading it any time the analysis is run.  The \texttt{GenomicFeatures} package provides functions to create TxDb objects based on data downloaded from UCSC Genome Bioinformatics, BioMart or gff/gtf files. See "Creating New TxDb Objects or Packages" in the \texttt{GenomicFeatures} vignette for more details. In this example, a TxDb is built from a gtf file:
 
@@ -56,11 +45,6 @@ TxDb <- makeTxDbFromGFF(
   file="genes.gtf",
   format="gtf")
 @
-Alternatively, if you have already created a TxDb, you can simply load into your session:
-<<loadTxDb, echo=TRUE, eval=FALSE>>=
-TxDb <- loadDb(file="genes.sqlite")
-@
-
 
 \section{Running \texttt{ASpli}}
 \texttt{ASpli} is divided in four independent steps or modules (Figure 1) : 
@@ -111,30 +95,26 @@ Bins and junctions are labeled always in  5' to 3' sense of the plus strand. Thi
 \end{figure}
 
 
-The \texttt{binGenome} method allows us to  extract genome coordinates at the gene, exon, intron and junction level and returns an object of class \texttt{ASpli-features}.
+The \texttt{binGenome} method allows us to  extract genome coordinates at the gene, exon, intron and junction level and returns an object of class \texttt{ASpli-features}. Then, features cordinates could be extractd using their accesors:
 
 <<binGenome, echo=TRUE, eval=FALSE>>=
 features<-binGenome(TxDb) 
-@
-Features cordinates could be extractd from it using following accesors:
- 
-<<featuresAccesors, echo=TRUE, eval=FALSE>>=
 gene.coord<-featuresg(features)
 bin.coord<-featuresb(features)
 junction.coord<-featuresj(features)
 @
- 
+
 \subsection{Read Counting} 
 \subsubsection{Mapping file and bam loading}%3.2.1
 Sample names, full path of BAM files and experimental factors should be specified in a dataframe (i.e. \texttt{targets}) under the header: \texttt{bam} and \texttt{condition}, and sample names as rownames. For example: for a one factor experiment with 2 replicates for each condition (Control and Mutant):
-<<targetsDF, echo=TRUE, eval=FALSE>>=
+<<targetsDF, echo=TRUE, eval=TRUE>>=
 targets<-data.frame(bam=c("Ct1.bam", "Ct2.bam", "Mut1.bam","Mut2.bam" ),
                     condition=rep(c("CT", "Mut"), each=2), 
                     row.names=c("Ct1", "Ct2", "Mut1","Mut2" ))
 @ 
 
 More sofisticated designs, should be specified as follow, For example: for a two factor experiment with 2 replicates for each condition (Control, Mutant, Time1, Time2):
-<<targetsDF2, echo=TRUE, eval=FALSE>>=
+<<targetsDF2, echo=TRUE, eval=TRUE>>=
 bkg=rep(c("CT", "Mut"), each=4)
 time=rep(rep(c("T1", "T2"), each=2),2)
 targets_2<-data.frame(bam=c("Ct_time1_rep1.bam", "Ct_time1_rep2.bam", 
@@ -158,7 +138,6 @@ bam<-loadBAM(targets)
 
 Using the method \texttt{readCounts}, read alignments are overlaid on features. Results are stored into an \texttt{ASpli-counts} object. Read densities (number of reads / feature length) are calculated for genes and bins.
 Count tables and read densities tables are produced at different genomic levels, including genes, bins, junctions, and intron flanking regions. 
-
 <<loadBam, echo=TRUE, eval=FALSE>>=
 counts<-readCounts(features, bam, l=100L, maxISize=5000)
 @
@@ -169,8 +148,8 @@ Parameters:
 \item \texttt{maxISize}: maximum intron expected size. Junctions longer than this size will be dicarded. \cite{Hong01122006}
 \end{itemize}
 
-Count and read density tables could be extracted using accesors:
-<<accesorsFamil1, echo=TRUE, eval=FALSE>>=
+Count and read density tables could be extracted using accesors. Also, it is possible to export count and read densities tables in a tidy manner.
+<<writeFamil1, echo=TRUE, eval=FALSE>>=
 gene.counts<-countsg(counts)
 gene.rd<-rdsg(counts)
 
@@ -180,9 +159,7 @@ bin.rd<-rdsb(counts)
 junction.counts<-countsj(counts)
 e1i.counts<-countse1i(counts)
 ie2.counts<-countsie2(counts)
-@
-It is possible to export count and read densities tables in a tidy manner.
-<<writeFamil1, echo=TRUE, eval=FALSE>>=
+
 writeCounts(counts=counts, output.dir = "example")
 writeRds(counts=counts, output.dir = "example")
 @
@@ -219,25 +196,19 @@ The analysis will consider junctions that:
 \item Have more than a minimum number of reads supporting them (parameter \texttt{threshold, default=5})
 \end{itemize}
 
-To provide  an integrative view of the AS events being analyzed, splice junction information is used to analyze differential bin usage. PSI (percent of inclusion) and PIR (percent of intron retention) metrics, which are extensively used to quantify AS \cite{pmid21057496}, are calculated.  (see Figure 3) In the case of exonic bins, PSI values are computed using junctions that share start or end positions and fully span the exon. In  the case of intronic bins, the PIR metric is computed using junctions that share start and end with each intronic bin, and read counts in regions spanning the intron/exon boundary. 
+To provide  an integrative view of the AS events being analyzed, splice junction information is used to analyze differential bin usage. PSI (percent of inclusion) and PIR (percent of intron retention) metrics, which are extensively used to quantify AS \cite{pmid21057496}, are calculated.  (see Figure 3) In the case of exonic bins, PSI values are computed using junctions that share start or end positions and fully span the exon. In  the case of intronic bins, the PIR metric is computed using junctions that share start and end with each intronic bin, and read counts in regions spanning the intron/exon boundary.  This information allows the user to obtain reliable information on the relative abundance of the AS event being evaluated. Both metrics strongly enrich the count-centric analysis and provide independent experimental support for the existence of novel AS events, based on the identification of corresponding changes in nearby splice junctions.\\
+For each experimental junction identified, it is also reported if it is new and which bins are spanned. In addition, it is stated if the junction is completely included in an annotated bin, which would indicate that the AS event is a possible exintron \cite{pmid25934563}. 
 
-<<AsAccesors, echo=TRUE, eval=FALSE>>=
+In addition, it is also possible to access and export tables:
+<<writeAS, echo=TRUE, eval=FALSE>>=
 irPIR<-irPIR(as)
 altPSI<-altPSI(as)
 esPSI<-esPSI(as)
 junctionsPIR<-junctionsPIR(as)
 junctionsPSI<-junctionsPSI(as)
-@
 
-This information allows the user to obtain reliable information on the relative abundance of the AS event being evaluated. Both metrics strongly enrich the count-centric analysis and provide independent experimental support for the existence of novel AS events, based on the identification of corresponding changes in nearby splice junctions.\\
-For each experimental junction identified, it is also reported if it is new and which bins are spanned. In addition, it is stated if the junction is completely included in an annotated bin, which would indicate that the AS event is a possible exintron \cite{pmid25934563}. 
-
-In addition, it is also possible to export tables using   \texttt{writeAS}:
-<<writeAS, echo=TRUE, eval=FALSE>>=
 writeAS(as=as, output.dir="example")
 @
-
-
 
 
 \textbf{New splicing events discovery} \\
@@ -391,22 +362,15 @@ Inspection of coverage plots is a good practice for the interpretation of analyt
 \texttt{event, gene\_coordinates, start of bin, end of bin} and bin names as rownames.
 \item In \texttt{targetsPlot} object you should specify which BAM files you will plot, in which colors and which sample names you want to display. 
 
-<<targetsPlot, eval=FALSE>>=
+<<targetsPlot, eval=TRUE>>=
 targetsPlot<-data.frame(bam=c("CT.bam","KD.bam"), 
                         sample=c("ct", "kd"), 
                         color=c("blue", "black"), 
                         stringsAsFactors=FALSE)
 @
 \item You have to put \texttt{BAI} files of the corresponding BAM ones in the same folder and provide a \texttt{TxDb} object to the function. 
-
-\item You need  to install and load Gviz package before plotting:
-
-<<Gviz, eval=FALSE>>=
-
-library(Gviz)
-@
-
 \end{itemize}
+
 And finally, you can plot:
 
 <<plotTopTags, eval=FALSE>>=
@@ -417,47 +381,52 @@ plotTopTags(auxdf,
 @
 
 \section{Example data}
-It is possible to run a demo of ASpli using public RNA-seq data available via Bioconductor. It requieres installing of \texttt{RNAseqData.HNRNPC.bam.chr14} package and loading  an small TxDb of Human Genome only for chromosome 14. This subset of reads is part of an experiment intended to analyze splicing factors and their relationship with exonization of Alu elements \cite{Zarnack2013453} 
-
+It is possible to run a demo of ASpli using public RNA-seq data available via Bioconductor. It requieres installing of \texttt{RNAseqData.HNRNPC.bam.chr14} package and loading  an small TranscriptDb of Human Genome only for chromosome 14. This subset of reads is part of an experiment intended to analyze splicing factors and their relationship with exonization of Alu elements \cite{Zarnack2013453} \\
+We load the packages and the genome:
 <<librariesEx, echo=TRUE, eval=TRUE>>=
 library(ASpli)
 library(RNAseqData.HNRNPC.bam.chr14)
 @
 
-And now we can perform the complete analysis.
-<<loadDb, echo=TRUE, eval=FALSE>>=
+In this case we are loading a genome \texttt{TranscriptDb} already created and available in the package for the chromosome 14:
+
+<<loadDb, echo=TRUE, eval=TRUE>>=
 chr14 <- system.file("extdata","chr14.sqlite", package="ASpli")
 genome<-loadDb(chr14)
+@
+
+And now we are ready to start the complete analysis.
+<<binGenome, echo=TRUE, eval=TRUE>>=
 features<-binGenome(genome) 
 @
 
 Create targets object using the information of the available files:
-<<targetsEx, echo=TRUE, eval=FALSE>>=
+<<targetsEx, echo=TRUE, eval=TRUE>>=
 targets <- data.frame(row.names=names(RNAseqData.HNRNPC.bam.chr14_BAMFILES),
                       bam=matrix(unlist(RNAseqData.HNRNPC.bam.chr14_BAMFILES), ncol = 1, byrow = TRUE), 
                       condition=c(rep("CT",4),rep("KD",4)))
 @
 Load bam files:
-<<loadBam, echo=TRUE, eval=FALSE>>=
+<<loadBam, echo=TRUE, eval=TRUE>>=
 bam<-loadBAM(targets)
 @
 Overlap alignments against features:
-<<todosJuntos, eval=FALSE>>=
+<<todosJuntos, eval=TRUE>>=
 counts<-readCounts(features, bam, l=100L, maxISize=50000)
 @
 Perform DE/DU analysis
-<<DU, eval=FALSE>>=
+<<DU, eval=TRUE>>=
 pair<-c("CT","KD")
 group<-c(rep("CT", 4),rep("KD", 4))
 du_HNRNPC<-DUreport(counts, targets, pair, group)  
 @
 Analyze AS using junctions:
-<<AS, eval=FALSE>>=
+<<AS, eval=TRUE>>=
 as_HNRNPC<-AsDiscover(counts=counts, targets=targets, features=features, bam=bam, l=100L, pair=pair)
 @
 
 Select TopTags (only using DU information:)
-<<topTags, echo=TRUE, eval=FALSE>>=
+<<topTags, echo=TRUE, eval=TRUE>>=
 binsdu<-binsDU(du_HNRNPC)
 topTagsBins<-which(binsdu$bin.fdr <= 0.1 & 
                        abs(binsdu$logFC) >=0.58)
@@ -465,15 +434,14 @@ topTagsBins<-which(binsdu$bin.fdr <= 0.1 &
 
 We can inspect visually the results of topTags. Sometimes is useful to merge BAM files by conditions. \textit{(In this example data, control and knock down replicates were  merged using \texttt{samtools merge} into \textbf{CT.bam} and \textbf{KD.bam} respectively)}. Before plotting it is mandatory to install and load \texttt{Gviz} package.
 
-<<targetsPlot, eval=FALSE>>=
+<<targetsPlot, eval=TRUE>>=
 targetsPlot<-data.frame(bam=targets$bam, 
                         sample=group<-c(rep("CT", 4),rep("KD", 4)), 
                         color=group<-c(rep("blue", 4),rep("red", 4)), 
                         stringsAsFactors=FALSE)
 @
 
-<<auxdf, echo=TRUE, eval=FALSE>>=
-library(Gviz)
+<<auxdf, echo=TRUE, eval=TRUE>>=
 auxdf<-binsdu[topTagsBins,]
 #for simplicity, we choose one: LRR1:E005
 plotTopTags(auxdf["LRR1:E005",], 
@@ -495,7 +463,7 @@ Check overlap between default DUreport (using gene expression correction and edg
 \caption{Top Tags bins comparison, bin.fdr less than 0.1, absolute logFC greater than 0.58}
 \end{figure}
 
-<<check, echo=TRUE, eval=FALSE>>=
+<<check, echo=TRUE, eval=TRUE>>=
 binsdu<-binsDU(du_HNRNPC); dim(binsdu)
 topTagsBins<-which(binsdu$bin.fdr <= 0.1 & 
                      abs(binsdu$logFC) >=0.58)

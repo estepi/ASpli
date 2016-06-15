@@ -1,15 +1,11 @@
-\name{writeRds}
+\name{write}
 \alias{writeRds}
 \alias{writeCounts}
 \alias{writeAS}
 \alias{writeDU}
 \alias{writeAll}
-\title{
-Write results 
-}
-\description{
-Export tab delimited files in structured output
-}
+\title{ Write results}
+\description{ Export tab delimited files in structured output }
 \usage{
 writeCounts(counts, output.dir="counts")
 writeRds(counts, output.dir="rds")
@@ -18,24 +14,11 @@ writeAS(as, output.dir="as")
 writeAll(counts, du, as, output.dir="output")
 }
 \arguments{
-\item{counts}{
-An ASpli-counts object
+\item{counts}{An ASpli-counts object}
+\item{as}{An ASpli-AS object}
+\item{du}{An ASpli-DU object}
+\item{output.dir}{ Name of output folder (new or existing) }
 }
-\item{as}{
-An ASpli-AS object
-}
-\item{du}{
-An ASpli-DU object
-}
-\item{output.dir}{
-Name of output folder (new or existing)
-}
-}
-\details{
-Tab delimited files are exported in a tidy manner into output folder
-}
-\author{
-Estefania Mancini, Marcelo Yanovsky, Ariel Chernomoretz 
-}
-\seealso{
-\code{ \link{AsDiscover}, \link{binGenome},\link{DUreport}}}
+\value{ Tab delimited files are exported in a tidy manner into output folder }
+\author{ Estefania Mancini, Marcelo Yanovsky, Ariel Chernomoretz}
+\seealso{ \code{ \link{AsDiscover}, \link{binGenome},\link{DUreport} } }
