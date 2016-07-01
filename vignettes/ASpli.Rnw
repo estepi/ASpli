@@ -24,18 +24,20 @@ In this vignette, we describe how to use ASpli, an integrative and user-friendly
 
 \section{Getting started}
 
-\texttt{ASpli} pacakge requires previous installation of several  bioconductor packages: \texttt{edgeR}, \texttt{DEXSeq}, \texttt{GenomicFeatures}, \texttt{GenomicRanges}, \texttt{GenomicAlignments} and  \texttt{Gviz}. \\
-
 BAM files of each sample and gene annotation are mandatory. Make sure all files use the same coordinate system. It is a good practice to organize all required files (or symbolic links of them) together into the  working directory.
 
 \subsection{Installation}
-
-ASpli can be installed locally from the command line:
-
-\begin{verbatim}
-R CMD INSTALL ASpli_0.99.0.tar.gz
-\end{verbatim}
-
+ASpli is available at bioconductor.org and can be downloaded using
+\texttt{biocLite()}:
+<<installation, echo=TRUE, eval=FALSE>>=
+source("https://bioconductor.org/biocLite.R")
+biocLite("ASpli")
+@
+<<loadASpli, echo=TRUE, eval=TRUE>>=
+library(ASpli)
+@
+ 
+\texttt{biocLite()} will take care of installing all the packages that ASpli depends on e.g. edgeR, DEXSeq, GenomicFeatures, GenomicRanges, GenomicAlignments, Gviz, and more...
 
 \subsection{Building a \texttt{TxDb} of your genome }
 Gene annotation is handled using \texttt{TxDb} objects. The building of a \texttt{TxDb} object might be time consuming, depending on the size of your genome. If a \texttt{TxDb} has been already created, we strongly recommend  saving it as a \texttt{sqlite} file and reloading it any time the analysis is run.  The \texttt{GenomicFeatures} package provides functions to create TxDb objects based on data downloaded from UCSC Genome Bioinformatics, BioMart or gff/gtf files. See "Creating New TxDb Objects or Packages" in the \texttt{GenomicFeatures} vignette for more details. In this example, a TxDb is built from a gtf file:
@@ -95,51 +97,49 @@ Bins and junctions are labeled always in  5' to 3' sense of the plus strand. Thi
 \end{figure}
 
 
-The \texttt{binGenome} method allows us to  extract genome coordinates at the gene, exon, intron and junction level and returns an object of class \texttt{ASpli-features}. Then, features cordinates could be extractd using their accesors:
+The \texttt{binGenome} method allows us to  extract genome coordinates at the gene, exon, intron and junction level and returns an object of class \texttt{ASpliFeatures}. Then, features cordinates could be extractd using their accesors:
 
 <<binGenome, echo=TRUE, eval=FALSE>>=
-features<-binGenome(TxDb) 
-gene.coord<-featuresg(features)
-bin.coord<-featuresb(features)
-junction.coord<-featuresj(features)
+features <- binGenome(TxDb) 
+GenesCoord <- featuresg(features)
+BinsCoord <- featuresb(features)
+JunctionsCoord <- featuresj(features)
 @
 
 \subsection{Read Counting} 
 \subsubsection{Mapping file and bam loading}%3.2.1
 Sample names, full path of BAM files and experimental factors should be specified in a dataframe (i.e. \texttt{targets}) under the header: \texttt{bam} and \texttt{condition}, and sample names as rownames. For example: for a one factor experiment with 2 replicates for each condition (Control and Mutant):
 <<targetsDF, echo=TRUE, eval=TRUE>>=
-targets<-data.frame(bam=c("Ct1.bam", "Ct2.bam", "Mut1.bam","Mut2.bam" ),
+bamFiles <- c("Ct1.bam", "Ct2.bam", "Mut1.bam","Mut2.bam" )
+targets <- data.frame(bam=bamFiles,
                     condition=rep(c("CT", "Mut"), each=2), 
-                    row.names=c("Ct1", "Ct2", "Mut1","Mut2" ))
+                    row.names=sub("\\.bam$", "", bamFiles))
 @ 
-
 More sofisticated designs, should be specified as follow, For example: for a two factor experiment with 2 replicates for each condition (Control, Mutant, Time1, Time2):
 <<targetsDF2, echo=TRUE, eval=TRUE>>=
-bkg=rep(c("CT", "Mut"), each=4)
-time=rep(rep(c("T1", "T2"), each=2),2)
-targets_2<-data.frame(bam=c("Ct_time1_rep1.bam", "Ct_time1_rep2.bam", 
-                            "Ct_time2_rep1.bam", "Ct_time2_rep2.bam",
-                            "Mut_time1_rep1.bam","Mut_time1_rep2.bam",
-                            "Mut_time2_rep1.bam","Mut_time2_rep2.bam"),
-                      condition=paste(bkg, time, sep="."),
-                      row.names=c("Ct_time1_rep1", "Ct_time1_rep2", 
-                            "Ct_time2_rep1", "Ct_time2_rep2",
-                            "Mut_time1_rep1","Mut_time1_rep2",
-                            "Mut_time2_rep1","Mut_time2_rep2" ))
+bkg <- rep(c("CT", "Mut"), each=4)
+time <- rep(rep(c("T1", "T2"), each=2),2)
+bamFiles <- c("Ct_time1_rep1.bam", "Ct_time1_rep2.bam",
+         "Ct_time2_rep1.bam", "Ct_time2_rep2.bam",
+         "Mut_time1_rep1.bam","Mut_time1_rep2.bam",
+         "Mut_time2_rep1.bam","Mut_time2_rep2.bam")
+targets_2 <- data.frame(bam=bamFiles,
+                        condition=paste(bkg, time, sep="."),
+                        row.names=sub("\\.bam$", "", bamFiles))
 @ 
 
 Using the \texttt{targets} data.frame, BAM files are loaded and stored as read alignments in an object of type list.
 
 <<loadBam, echo=TRUE, eval=FALSE>>=
-bam<-loadBAM(targets)
+bam <- loadBAM(targets)
 @
 
 \subsubsection{Overlap features and read alignments} 
 
-Using the method \texttt{readCounts}, read alignments are overlaid on features. Results are stored into an \texttt{ASpli-counts} object. Read densities (number of reads / feature length) are calculated for genes and bins.
+Using the method \texttt{readCounts}, read alignments are overlaid on features. Results are stored into an \texttt{ASpliCounts} object. Read densities (number of reads / feature length) are calculated for genes and bins.
 Count tables and read densities tables are produced at different genomic levels, including genes, bins, junctions, and intron flanking regions. 
 <<loadBam, echo=TRUE, eval=FALSE>>=
-counts<-readCounts(features, bam, l=100L, maxISize=5000)
+counts <- readCounts(features, bam, l=100L, maxISize=5000)
 @
 
 Parameters:
@@ -150,15 +150,15 @@ Parameters:
 
 Count and read density tables could be extracted using accesors. Also, it is possible to export count and read densities tables in a tidy manner.
 <<writeFamil1, echo=TRUE, eval=FALSE>>=
-gene.counts<-countsg(counts)
-gene.rd<-rdsg(counts)
+GeneCounts <- countsg(counts)
+GeneRd <- rdsg(counts)
 
-bin.counts<-countsb(counts)
-bin.rd<-rdsb(counts)
+BinCounts <- countsb(counts)
+BinRd <- rdsb(counts)
 
-junction.counts<-countsj(counts)
-e1i.counts<-countse1i(counts)
-ie2.counts<-countsie2(counts)
+JunctionCounts <- countsj(counts)
+e1iCounts <- countse1i(counts)
+ie2Counts <- countsie2(counts)
 
 writeCounts(counts=counts, output.dir = "example")
 writeRds(counts=counts, output.dir = "example")
@@ -180,13 +180,13 @@ Only those reads which minimum overlap \textit{l} and without gap in this interv
 \end{itemize}
 
 \subsection{Alternative splicing analysis and discovery using junction}
-Using the obtained count tables at bin and junction level it is possible to get an integrative view of the AS events under analysis. The function \texttt{AsDiscover} will produce an \texttt{ASpli-AS} object containing several comprehensive tables, which could be accesed through their corresponding accesors. It is necessary to specify pair of comparison:
+Using the obtained count tables at bin and junction level it is possible to get an integrative view of the AS events under analysis. The function \texttt{AsDiscover} will produce an \texttt{ASpliAS} object containing several comprehensive tables, which could be accesed through their corresponding accesors. It is necessary to specify pair of comparison:
 
 
 
 <<AsDiscover, echo=TRUE, eval=FALSE>>=
-pair<-c("CT","KD")
-as<-AsDiscover(counts, targets, features, bam, l=100L, pair=pair)
+pair <- c("CT","KD")
+as <- AsDiscover(counts, targets, features, bam, l=100L, pair=pair)
 @
 
 
@@ -201,18 +201,18 @@ For each experimental junction identified, it is also reported if it is new and 
 
 In addition, it is also possible to access and export tables:
 <<writeAS, echo=TRUE, eval=FALSE>>=
-irPIR<-irPIR(as)
-altPSI<-altPSI(as)
-esPSI<-esPSI(as)
-junctionsPIR<-junctionsPIR(as)
-junctionsPSI<-junctionsPSI(as)
+irPIR <- irPIR(as)
+altPSI <- altPSI(as)
+esPSI <- esPSI(as)
+junctionsPIR <- junctionsPIR(as)
+junctionsPSI <- junctionsPSI(as)
 
 writeAS(as=as, output.dir="example")
 @
 
 
 \textbf{New splicing events discovery} \\
-Aspli allows novel AS events to be identified based on the splice junction repertoire. A novel AS event is identified whenever a novel splice junction that shares its beginning or end with another splice junction is discovered. When a novel AS event is identified using the splice junction repertoire, the PSI metric is calculated and reported. This ability to detect novel AS events and to estimate the magnitude of the changes in the usage of these AS events under different experimental conditions are original functions of the package. 
+ASpli allows novel AS events to be identified based on the splice junction repertoire. A novel AS event is identified whenever a novel splice junction that shares its beginning or end with another splice junction is discovered. When a novel AS event is identified using the splice junction repertoire, the PSI metric is calculated and reported. This ability to detect novel AS events and to estimate the magnitude of the changes in the usage of these AS events under different experimental conditions are original functions of the package. 
 
 \begin{figure*}[ht!]
     \centering
@@ -240,13 +240,13 @@ Aspli allows novel AS events to be identified based on the splice junction reper
 
 Using the generated counting tables it is possible to estimate the differential usage (DU) of bins and junctions, and the differential expression at gene level (DE) using any analysis methodology of choice. For the sake of user convinience, we included two wrapper functions, \texttt{DUreport} and \texttt{DUreport\_DEXseq}, that allow to perform such analysis using any of two widespread used methodologies: edgeR and DEXseq, respectively.
 
-DUreport function performs statistical tests using a count centric approach. Results are stored into an \texttt{ASpli-DU} object. Individual tables can be accesed using accesors and exported using \texttt{writeDU} function.
+DUreport function performs statistical tests using a count centric approach. Results are stored into an \texttt{ASpliDU} object. Individual tables can be accesed using accesors and exported using \texttt{writeDU} function.
 
 It is necessary to specify group and pair of comparison:
 <<group, eval=FALSE, echo=TRUE>>=
-pair<-c("CT","KD")
-group<-c(rep("CT", 4),rep("KD", 4))
-du<-DUreport(counts, targets, pair, group)
+pair <- c("CT","KD")
+group <- c(rep("CT", 4),rep("KD", 4))
+du <- DUreport(counts, targets, pair, group)
 @
 
 \subsubsection{Differential gene expression (DE)}
@@ -270,7 +270,7 @@ average \textit{Gene counts} in all conditions:
 
 As already mentioned it is also possible to use DEXSeq for differential usage estimation, without any correction:
 <<DEXSeq, echo=TRUE, eval=FALSE>>=
- du_DEXSeq<-DUreport_DEXSeq(counts, targets, pair, group)
+ du_DEXSeq <- DUreport_DEXSeq(counts, targets, pair, group)
 @
 
 In general, we have found a high overlap between both methods. (See example below, in Section 4 "Example data" analysis.)\\
@@ -279,13 +279,13 @@ Output tables can be accessed and exported easily:
  
 <<export, echo=TRUE, eval=FALSE>>=
 writeDU(du, output.dir="example")
-genes_de<-genesDE(du)
-bins_du<-binsDU(du)
-junctions_du<-junctionsDU(du)
+genesde <- genesDE(du)
+binsdu <- binsDU(du)
+junctionsdu <- junctionsDU(du)
 @
 
 \subsection{Output and results}
-At each module, results are stored in \texttt{Aspli-objects}. Self-explanatory tables can be exported at each step of the analysis. Using \texttt{write} functions, it is possible to export tab delimited tables in a features-level output folder, as was detailed before:
+At each module, results are stored in \texttt{ASpliObjects}. Self-explanatory tables can be exported at each step of the analysis. Using \texttt{write} functions, it is possible to export tab delimited tables in a features-level output folder, as was detailed before:
 
 <<write, echo=TRUE, eval=FALSE>>=
 writeCounts(counts, "example_counts")
@@ -317,7 +317,6 @@ Information summary reported in tables:
     \item \textbf{event}: according to our classification, bins are classified into ES, IR, ALt5'SS, ALt3'SS, external. Bins tagged with * means this AS bin is involved simultaneously in more than one AS event type mean they came from 
   \item \textbf{locus}: gene coordinates
 \end{itemize}
-
 %------------------------------------------------%
 \item Junction exclusive:
   \begin{itemize}
@@ -363,8 +362,9 @@ Inspection of coverage plots is a good practice for the interpretation of analyt
 \item In \texttt{targetsPlot} object you should specify which BAM files you will plot, in which colors and which sample names you want to display. 
 
 <<targetsPlot, eval=TRUE>>=
-targetsPlot<-data.frame(bam=c("CT.bam","KD.bam"), 
-                        sample=c("ct", "kd"), 
+bamFiles <- c("CT.bam","KD.bam")
+targetsPlot <- data.frame(bam=bamFiles, 
+                        sample=sub("\\.bam$", "", bamFiles), 
                         color=c("blue", "black"), 
                         stringsAsFactors=FALSE)
 @
@@ -381,63 +381,61 @@ plotTopTags(auxdf,
 @
 
 \section{Example data}
-It is possible to run a demo of ASpli using public RNA-seq data available via Bioconductor. It requieres installing of \texttt{RNAseqData.HNRNPC.bam.chr14} package and loading  an small TranscriptDb of Human Genome only for chromosome 14. This subset of reads is part of an experiment intended to analyze splicing factors and their relationship with exonization of Alu elements \cite{Zarnack2013453} \\
-We load the packages and the genome:
+It is possible to run a demo of \texttt{ASpli} using public RNA-seq data available via Bioconductor. It requieres installing of \texttt{RNAseqData.HNRNPC.bam.chr14} package and loading  an small TranscriptDb of Human Genome only for chromosome 14. This subset of reads is part of an experiment intended to analyze splicing factors and their relationship with exonization of Alu elements \cite{Zarnack2013453}. We load the package and the genome:
 <<librariesEx, echo=TRUE, eval=TRUE>>=
-library(ASpli)
 library(RNAseqData.HNRNPC.bam.chr14)
 @
 
-In this case we are loading a genome \texttt{TranscriptDb} already created and available in the package for the chromosome 14:
+In this case we are loading a genome \texttt{TranscriptDb} already created and available in the  \texttt{ASpli} package for the Homo sapiens chromosome 14:
 
 <<loadDb, echo=TRUE, eval=TRUE>>=
 chr14 <- system.file("extdata","chr14.sqlite", package="ASpli")
-genome<-loadDb(chr14)
+genome <- loadDb(chr14)
 @
 
 And now we are ready to start the complete analysis.
 <<binGenome, echo=TRUE, eval=TRUE>>=
-features<-binGenome(genome) 
+features <- binGenome(genome) 
 @
 
 Create targets object using the information of the available files:
 <<targetsEx, echo=TRUE, eval=TRUE>>=
-targets <- data.frame(row.names=names(RNAseqData.HNRNPC.bam.chr14_BAMFILES),
-                      bam=matrix(unlist(RNAseqData.HNRNPC.bam.chr14_BAMFILES), ncol = 1, byrow = TRUE), 
-                      condition=c(rep("CT",4),rep("KD",4)))
+targets <- data.frame(bam=RNAseqData.HNRNPC.bam.chr14_BAMFILES,
+                       condition=c(rep("CT",4),rep("KD",4)))
+
 @
 Load bam files:
 <<loadBam, echo=TRUE, eval=TRUE>>=
-bam<-loadBAM(targets)
+bam <- loadBAM(targets)
 @
 Overlap alignments against features:
 <<todosJuntos, eval=TRUE>>=
-counts<-readCounts(features, bam, l=100L, maxISize=50000)
+counts <- readCounts(features, bam, l=100L, maxISize=50000)
 @
 Perform DE/DU analysis
 <<DU, eval=TRUE>>=
-pair<-c("CT","KD")
-group<-c(rep("CT", 4),rep("KD", 4))
-du_HNRNPC<-DUreport(counts, targets, pair, group)  
+pair <- c("CT","KD")
+group <- c(rep("CT", 4),rep("KD", 4))
+du_HNRNPC <- DUreport(counts, targets, pair, group)  
 @
 Analyze AS using junctions:
 <<AS, eval=TRUE>>=
-as_HNRNPC<-AsDiscover(counts=counts, targets=targets, features=features, bam=bam, l=100L, pair=pair)
+as_HNRNPC <- AsDiscover(counts=counts, targets=targets, features=features, bam=bam, l=100L, pair=pair)
 @
 
 Select TopTags (only using DU information:)
 <<topTags, echo=TRUE, eval=TRUE>>=
-binsdu<-binsDU(du_HNRNPC)
-topTagsBins<-which(binsdu$bin.fdr <= 0.1 & 
-                       abs(binsdu$logFC) >=0.58)
+binsdu <- binsDU(du_HNRNPC)
+topTagsBins <- which(binsdu$bin.fdr <= 0.1 & 
+                 abs(binsdu$logFC) >=0.58)
 @
 
 We can inspect visually the results of topTags. Sometimes is useful to merge BAM files by conditions. \textit{(In this example data, control and knock down replicates were  merged using \texttt{samtools merge} into \textbf{CT.bam} and \textbf{KD.bam} respectively)}. Before plotting it is mandatory to install and load \texttt{Gviz} package.
 
 <<targetsPlot, eval=TRUE>>=
-targetsPlot<-data.frame(bam=targets$bam, 
-                        sample=group<-c(rep("CT", 4),rep("KD", 4)), 
-                        color=group<-c(rep("blue", 4),rep("red", 4)), 
+targetsPlot <- data.frame(bam=targets$bam, 
+                        sample=targets$condition, 
+                        color=c(rep("blue", 4),rep("red", 4)), 
                         stringsAsFactors=FALSE)
 @
 
@@ -456,7 +454,7 @@ plotTopTags(auxdf["LRR1:E005",],
 \end{figure}
 
 
-Check overlap between default DUreport (using gene expression correction and edgeR) and DU\_report using DEXSeq:
+Check overlap between default DUreport (using gene expression correction and edgeR) and DUreport using DEXSeq:
 \begin{figure}[ht!]
 \centering
 \includegraphics[width=0.5\textwidth]{venn.png}
@@ -464,17 +462,22 @@ Check overlap between default DUreport (using gene expression correction and edg
 \end{figure}
 
 <<check, echo=TRUE, eval=TRUE>>=
-binsdu<-binsDU(du_HNRNPC); dim(binsdu)
-topTagsBins<-which(binsdu$bin.fdr <= 0.1 & 
+binsdu <- binsDU(du_HNRNPC)
+topTagsBins <- which(binsdu$bin.fdr <= 0.1 & 
                      abs(binsdu$logFC) >=0.58)
-##############################
-du_DEXSeq<-DUreport_DEXSeq(counts, targets, pair, group)
-binsdx<-binsDU(du_DEXSeq); dim(binsdx)
-topTagsBinsDx<-which(binsdx$bin.fdr <= 0.1 & 
+@
+Analyze with DEXSeq:
+<<DEXSeq, echo=TRUE, eval=TRUE>>=
+du_DEXSeq <- DUreport_DEXSeq(counts, targets, pair, group)
+binsdx <- binsDU(du_DEXSeq)
+topTagsBinsDx <- which(binsdx$bin.fdr <= 0.1 & 
                      abs(binsdx$logFC) >=0.58)
-all<-union(topTagsBins, topTagsBinsDx)
-auxdf<-data.frame(edgeR=all%in%topTagsBins,
-                  DEXSeq=all%in%topTagsBinsDx)
+@
+Plot in a Venn Diagram:
+<<venn, echo=TRUE, eval=TRUE>>=
+all <- union(topTagsBins, topTagsBinsDx)
+auxdf <- data.frame(edgeR=all%in%topTagsBins,
+                    DEXSeq=all%in%topTagsBinsDx)
 vennDiagram(auxdf)
 @
 
