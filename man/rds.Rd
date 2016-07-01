@@ -11,7 +11,7 @@ rds(counts, targets)
 }
 \arguments{
   \item{counts}{
-An ASpli-counts object
+An ASpliCounts object
 }
   \item{targets}{
 Target dataframe

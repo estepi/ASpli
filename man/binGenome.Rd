@@ -29,7 +29,7 @@ Bins and junctions are labelled always in  5' to 3' sense. This notation is stra
 }
 
 
-\value{ An ASpli-features object. It is  a list of features using GRanges format. }
+\value{ An ASpliFeatures object. It is  a list of features using GRanges format. }
 \author{Estefania Mancini, Marcelo Yanovsky, Ariel Chernomoretz }
 \seealso{ \code{\link{featuresg}, \link{featuresb} , \link{featuresj} 
 } 
@@ -37,11 +37,11 @@ Bins and junctions are labelled always in  5' to 3' sense. This notation is stra
 
 \examples{
 chr14 <- system.file("extdata","chr14.sqlite", package="ASpli")
-genome<-loadDb(chr14)
-features<-binGenome(genome)
-GeneRanges<-featuresg(features)
-BinRanges<-featuresb(features)
-JunctionRanges<-featuresj(features)
+genome <- loadDb(chr14)
+features <- binGenome(genome)
+GeneCoord <- featuresg(features)
+BinCoord <- featuresb(features)
+JunctionCoord <- featuresj(features)
 } 
 
 

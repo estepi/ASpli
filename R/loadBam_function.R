@@ -3,11 +3,11 @@ loadBAM <-
   function(targets, cores=NULL) 
   {
     #1.-read files and get a list
-    files = as.character(targets$bam)
+    files <- as.character(targets$bam)
     #2.-read alignments
     if (is.null(cores) )
     {
-      datac<-lapply(
+      datac <- lapply(
         
         files,
         function(x) 
@@ -21,8 +21,8 @@ loadBAM <-
     else
     {
       
-      datac<-mclapply( 
-        files, mc.cores=cores, 
+      datac <- mclapply( 
+        files, mc.cores = cores, 
         function(x) 
         { 
           aln <- readGAlignments(x)
@@ -31,7 +31,7 @@ loadBAM <-
       )
     }
     
-    names(datac)=rownames(targets)
+    names(datac) = rownames(targets)
     return(datac)
     
   }

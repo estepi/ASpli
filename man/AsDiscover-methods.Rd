@@ -21,13 +21,13 @@ AsDiscover(counts,
 }
 \arguments{
 \item{counts}{
-An object of class ASpli-counts.
+An object of class ASpliCounts.
 }
 \item{targets}{
 A dataframe containing sample, bam and condition columns 
 }
 \item{features}{
-An object of class ASpli-features.
+An object of class ASpliFeatures.
 }
 \item{bam}{
 A list with BAM files
@@ -48,7 +48,7 @@ Number of proccesors to use
 
 }
 \value{
-An object of class ASpli-AS 
+An object of class ASpliAS 
 \item{irPIR}{reports: event, e1i counts (J1), ie1 counts (J2), j_within (J3), PIR by condition. J1, J2, J3 sum of junctions (J1, J2, J3) by condition. 
 }
 
@@ -76,16 +76,15 @@ Estefania Mancini, Marcelo Yanovsky and Ariel Chernomoretz
 \examples{
 library(RNAseqData.HNRNPC.bam.chr14)
 chr14 <- system.file("extdata","chr14.sqlite", package="ASpli")
-genome<-loadDb(chr14)
-features<-binGenome(genome)
-targets <- data.frame(row.names=names(RNAseqData.HNRNPC.bam.chr14_BAMFILES),
-                      bam=matrix(unlist(RNAseqData.HNRNPC.bam.chr14_BAMFILES), ncol = 1, byrow = TRUE), 
-                    condition=c(rep("CT",4),rep("KD",4)))
-bam<-loadBAM(targets)
-counts<-readCounts(features, bam, l=100L, maxISize=50000)
-group=factor(c(rep("CT",4),rep("KD",4)))
-pair<-c("CT","KD")  
-as<-AsDiscover(counts, targets, features, bam, l=100L, pair=pair)
+genome <- loadDb(chr14)
+features <- binGenome(genome)
+targets <- data.frame(bam=RNAseqData.HNRNPC.bam.chr14_BAMFILES,
+                       condition=c(rep("CT",4),rep("KD",4)))
+bam <- loadBAM(targets)
+counts <- readCounts(features, bam, l=100L, maxISize=50000)
+group <- factor(c(rep("CT",4),rep("KD",4)))
+pair <- c("CT","KD")  
+as <- AsDiscover(counts, targets, features, bam, l=100L, pair=pair)
 writeAS(as=as, output.dir="only_as")
 }
 

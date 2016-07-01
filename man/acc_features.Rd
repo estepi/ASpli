@@ -3,10 +3,10 @@
 \alias{featuresg}
 \alias{featuresj}
 \title{
-Accessors for ASpli-features object
+Accessors for ASpliFeatures object
 }
 \description{
-Accessors for ASpli-features object
+Accessors for ASpliFeatures object
 }
 \usage{
 featuresg(x)
@@ -15,7 +15,7 @@ featuresj(x)
 }
 \arguments{
   \item{x}{
-  An ASpli-features object
+  An ASpliFeatures object
 }
 }
 \value{
@@ -24,8 +24,8 @@ Resturns a GenomicRanges object
 \author{ Estefania Mancini, Marcelo Yanovsky, Ariel Chernomoretz  }
 \examples{
 chr14 <- system.file("extdata","chr14.sqlite", package="ASpli")
-genome<-loadDb(chr14)
-features<-binGenome(genome)
+genome <- loadDb(chr14)
+features <- binGenome(genome)
 featuresg(features)
 featuresb(features)
 featuresj(features)

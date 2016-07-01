@@ -3,7 +3,7 @@ plotTopTags<-function(auxdf,
                       targetsPlot, 
                       output.dir)
 {
-  alns<-apply(targetsPlot,1,
+  alns <- apply(targetsPlot,1,
               function(x)
               {
                 AlignmentsTrack(
@@ -14,18 +14,18 @@ plotTopTags<-function(auxdf,
                   fill.coverage=x[3])
               }
   )
-  auxdf$gene_coordinates<-as.character(auxdf$gene_coordinates)
+  auxdf$gene_coordinates <- as.character(auxdf$gene_coordinates)
   for (i in 1:nrow(auxdf))
   {
-    title= paste(row.names(auxdf[i,]), auxdf$event[i])
+    title = paste(row.names(auxdf[i,]), auxdf$event[i])
     message("Plot: ", title)
-    split1=matrix(unlist(strsplit(auxdf$gene_coordinates[i], "[:]") ), byrow=TRUE, ncol=2) 
-    split2=matrix(unlist(strsplit(split1[2],  "[-]") ), byrow=TRUE, ncol=2) 
-    gen.start=as.numeric(split2[1])
-    gen.end=as.numeric(split2[2])
-    chrom=split1[1]
-    binStart=auxdf$start[i] -20
-    binEnd=auxdf$end[i] +20
+    split1 <- matrix(unlist(strsplit(auxdf$gene_coordinates[i], "[:]") ), byrow=TRUE, ncol=2) 
+    split2 <-  matrix(unlist(strsplit(split1[2],  "[-]") ), byrow=TRUE, ncol=2) 
+    gen.start <- as.numeric(split2[1])
+    gen.end <- as.numeric(split2[2])
+    chrom <- split1[1]
+    binStart <- auxdf$start[i] -20
+    binEnd <- auxdf$end[i] +20
     ###########################################fix
     txTrAT <- GeneRegionTrack(genome, 
                               chromosome = chrom,
@@ -47,14 +47,14 @@ plotTopTags<-function(auxdf,
       inBackground=FALSE
     )
     ###############################################################
-    currentDir<-getwd()
+    currentDir <- getwd()
     outputDir <- paste(currentDir, output.dir, sep = "/")       
     if(!file.exists(output.dir))
     {
       dir.create(outputDir)
     }
-    file<-paste(row.names(auxdf[i,]), "png", sep=".")
-    file<-sub(":", "_", file, perl=TRUE)      
+    file <- paste(row.names(auxdf[i,]), "png", sep=".")
+    file <- sub(":", "_", file, perl=TRUE)      
     png(filename = paste(outputDir, file, sep = "/"))
     plotTracks(ht1, 
                from = gen.start, 

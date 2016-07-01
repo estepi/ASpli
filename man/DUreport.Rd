@@ -12,7 +12,7 @@ DUreport(counts, targets, pair, group, minGenReads, minBinReads, minRds,ignoreEx
 
 \arguments{
 \item{counts}{
-An object of class ASpli-counts
+An object of class ASpliCounts
 }
 \item{targets}{
 A dataframe containing sample, bam and condition columns 
@@ -29,25 +29,23 @@ vector of length two, either numeric or character, providing the pair of groups 
 }
 
 
-\value{ An ASpli-DU object with results at \code{genes}, \code{bins} and \code{junctions} level }
+\value{ An ASpliDU object with results at \code{genes}, \code{bins} and \code{junctions} level }
 \author{
 Estefania Mancini, Marcelo Yanovsky, Ariel Chernomoretz
 }
 \examples{
 library(RNAseqData.HNRNPC.bam.chr14)
 chr14 <- system.file("extdata","chr14.sqlite", package="ASpli")
-genome<-loadDb(chr14)
-features<-binGenome(genome)
-targets <- data.frame(row.names=names(RNAseqData.HNRNPC.bam.chr14_BAMFILES),
-                      bam=matrix(unlist(RNAseqData.HNRNPC.bam.chr14_BAMFILES), 
-                                 ncol = 1, byrow = TRUE), 
-                      condition=c(rep("CT",4),rep("KD",4)))
-bam<-loadBAM(targets)
-counts<-readCounts(features, bam, l=100L, maxISize=50000)
-group<-factor(c(rep("CT",4), 
+genome <- loadDb(chr14)
+features <- binGenome(genome)
+targets <- data.frame(bam=RNAseqData.HNRNPC.bam.chr14_BAMFILES,
+                       condition=c(rep("CT",4),rep("KD",4)))
+bam <- loadBAM(targets)
+counts <- readCounts(features, bam, l=100L, maxISize=50000)
+group <- factor(c(rep("CT",4), 
                 rep("KD",4)))
-pair<-c("CT","KD")  
-du<-DUreport(counts, targets, pair, group)
+pair <- c("CT","KD")  
+du <- DUreport(counts, targets, pair, group)
 writeDU(du, output.dir="only_du")
 }
 \seealso{

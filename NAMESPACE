@@ -7,10 +7,12 @@ import(GenomicRanges)
 import(GenomicFeatures)
 import(edgeR)
 import(GenomicAlignments)
+import(DESeq2)
 import(DEXSeq)
 importFrom("grDevices", "dev.off", "png")
 importFrom("stats", "aggregate", "formula", "p.adjust")
-importFrom("utils", "head", "write.table")
+import(S4Vectors)
+import(AnnotationDbi)
 import(Gviz)
 exportMethods(
     "AsDiscover",
@@ -41,11 +43,12 @@ exportMethods(
     "junctionsPSI",
     "genesDE",
     "binsDU",
-    "junctionsDU"
+    "junctionsDU",
+    "show"
 )
 exportClasses(
-    "ASpli-AS",
-     "ASpli-counts",
-     "ASpli-DU",
-     "ASpli-features" 
+    "ASpliAS",
+     "ASpliCounts",
+     "ASpliDU",
+     "ASpliFeatures" 
 )

@@ -32,25 +32,26 @@ Estefania Mancini, Marcelo Yanovsky, Ariel Chernomoretz
 \examples{
 library(RNAseqData.HNRNPC.bam.chr14)
 chr14 <- system.file("extdata","chr14.sqlite", package="ASpli")
-genome<-loadDb(chr14)
-features<-binGenome(genome) 
-targets <- data.frame(row.names=names(RNAseqData.HNRNPC.bam.chr14_BAMFILES),
-                      bam=matrix(unlist(RNAseqData.HNRNPC.bam.chr14_BAMFILES), ncol = 1, byrow = TRUE), 
-                      condition=c(rep("CT",4),rep("KD",4)))
-bam<-loadBAM(targets)
-counts<-readCounts(features, bam, l=100L, maxISize = 50000)
-pair<-c("CT","KD")
-group<-c(rep("CT", 4),rep("KD", 4))
-du_HNRNPC<-DUreport(counts, targets, pair, group)  
-bins<-binsDU(du_HNRNPC)
-topTagsBins<-which(bins$bin.fdr <= 0.1 & 
+genome <- loadDb(chr14)
+features <- binGenome(genome) 
+targets <- data.frame(bam=RNAseqData.HNRNPC.bam.chr14_BAMFILES,
+                       condition=c(rep("CT",4),rep("KD",4)))
+bam <- loadBAM(targets)
+counts <- readCounts(features, bam, l=100L, maxISize = 50000)
+pair <- c("CT","KD")
+group <- c(rep("CT", 4),rep("KD", 4))
+du_HNRNPC <- DUreport(counts, targets, pair, group)  
+bins <- binsDU(du_HNRNPC)
+topTagsBins <- which(bins$bin.fdr <= 0.1 & 
                      abs(bins$logFC) >=0.58)
-targetsPlot<-data.frame(bam=targets$bam, 
-                        sample=group<-c(rep("CT", 4),rep("KD", 4)), 
+targetsPlot <- data.frame(bam=targets$bam, 
+                        sample=sub("\\.bam$", "", targets$bam), 
                         color=group<-c(rep("blue", 4),rep("red", 4)), 
                         stringsAsFactors=FALSE)
-auxdf<-bins[topTagsBins,]; head(auxdf)
+
+auxdf<-bins[topTagsBins,]
 #for simplicity, just one: LRR1:E005
+
 plotTopTags(auxdf["LRR1:E005",], 
             genome, 
             targetsPlot, 

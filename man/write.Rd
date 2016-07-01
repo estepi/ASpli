@@ -14,9 +14,9 @@ writeAS(as, output.dir="as")
 writeAll(counts, du, as, output.dir="output")
 }
 \arguments{
-\item{counts}{An ASpli-counts object}
-\item{as}{An ASpli-AS object}
-\item{du}{An ASpli-DU object}
+\item{counts}{An ASpliCounts object}
+\item{as}{An ASpliAS object}
+\item{du}{An ASpliDU object}
 \item{output.dir}{ Name of output folder (new or existing) }
 }
 \value{ Tab delimited files are exported in a tidy manner into output folder }
