@@ -45,8 +45,8 @@ bins <- binsDU(du_HNRNPC)
 topTagsBins <- which(bins$bin.fdr <= 0.1 & 
                      abs(bins$logFC) >=0.58)
 targetsPlot <- data.frame(bam=targets$bam, 
-                        sample=sub("\\.bam$", "", targets$bam), 
-                        color=group<-c(rep("blue", 4),rep("red", 4)), 
+                        sample=targets$condition, 
+                        color=c(rep("blue", 4),rep("red", 4)), 
                         stringsAsFactors=FALSE)
 
 auxdf<-bins[topTagsBins,]

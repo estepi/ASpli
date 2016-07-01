@@ -14,6 +14,7 @@
 \alias{rds,ASpliCounts-method}
 \alias{writeCounts,ASpliCounts-method}
 \alias{writeRds,ASpliCounts-method}
+\alias{show}
 \title{Class \code{"ASpliCounts"}}
 \description{ Contains results of read overlaps against all feature levels summarization }
 \section{Slots}{

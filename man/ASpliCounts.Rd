@@ -1,6 +1,7 @@
 \name{ASpliCounts}
 \docType{class}
 \alias{ASpliCounts}
+\alias{show}
 \description{ Contains results of read overlaps against all feature levels summarization }
 \title{Class \code{"ASpliCounts"}}
 \section{Slots}{
