@@ -194,19 +194,16 @@
       exon.as <- rep("-", as.bins@nLnode) #vector for exons metadata
       intron.as <- rep("-", as.bins@nRnode) #vector for introns metadata
       #Asign AS first
-      exon.as[as.bins@from] <- "as" #introns exons as
+      exon.as[as.bins@from] <- "as" #introns exons as;
       intron.as[as.bins@to] <- "as" #identify introns as
-      
       transcripts.unlist  <- unlist(transcripts) #41671  
       find.external.start <- findOverlaps(exon.bins, transcripts.unlist, type=c("start")) #
       find.external.end   <- findOverlaps(exon.bins, transcripts.unlist, type=c("end"))
-      
       exon.as[find.external.start@from] <- "external" #identify start exons bins
       exon.as[find.external.end@from] <- "external" #identify end exons bins
       #Asign external second
       #add metadata 
       #if a bin is AS and external, AS tag will be replaced by external.
-      
       mcols(intron.bins) <- append(mcols(intron.bins), DataFrame(class=intron.as)) 
       ###add introns.bins metadata
       mcols(exon.bins) <- append(mcols(exon.bins), DataFrame(class=exon.as)) 
@@ -219,9 +216,11 @@
       auxdf <- data.frame(feature=as.character(exons.introns.unique@elementMetadata$feature), 
                         class=as.character(exons.introns.unique@elementMetadata$class),
                         strand=as.character(exons.introns.unique@strand))
-      ###########classifying AS bins ################################
-      events <- rep("-",nrow(auxdf))
-      eventsJ <- rep("-",nrow(auxdf))
+    ###########classifying AS bins ################################
+      #events <- rep("-",nrow(auxdf))
+      events<-as.character(auxdf$class)
+      #eventsJ <- rep("-",nrow(auxdf))
+      eventsJ<-as.character(auxdf$class)
       #counters, just for   check
       IR <- 0
       ES <- 0
@@ -234,7 +233,7 @@
       multES <- 0
       multAlt5ss <- 0 
       multAlt3ss <- 0 
-      AsNotExternal <- sum(intron.as=="as") #5692 AS
+      AsNotExternal <- sum(intron.as=="as") 
       for (i in 1:nrow(auxdf)){  
         if  (auxdf$class[i] =="as")  {
           totAS = totAS +1  #OK
@@ -248,7 +247,6 @@
             end(ji) <- end(junctions)-1
             if (length(findOverlaps(exons.introns.unique[i,], ji, type="equal"))!= 0 ){ 
               events[i] <- "IR*"
-              table(events)
               eventsJ[i] <- "IR"
               multIR = multIR+1
             } else  {
@@ -310,7 +308,7 @@
               eventsJ[i] <- "Alt5ss"}
           }
         }
-      }  
+      }
       message("* Number of AS bins (not include external) =", totAS)
       message("* Number of AS bins (include external) =", AsNotExternal)
       message("* Classified as:", "\n", 
@@ -328,8 +326,8 @@
       mcols(exons.introns.unique) <- append(mcols(exons.introns.unique), DataFrame(event=events))
       mcols(exons.introns.unique) <- append(mcols(exons.introns.unique), DataFrame(eventJ=eventsJ))
       ###########################################################################
-      cat("* Number of AS bins (not include external) =", totAS)
-      cat("* Number of AS bins (include external) =", AsNotExternal)
+      cat("* Number of AS bins (not include external) =", totAS,  "\n" )
+      cat("* Number of AS bins (include external) =", AsNotExternal,  "\n")
       cat("* Classified as:", "\n", 
               "\t", "ES bins = ", ES, "\t","(",round(ES/totAS*100), "%)" , "\n", 
               "\t","IR bins = " , IR,"\t","(",round(IR/totAS*100), "%)" , "\n",
