@@ -48,7 +48,11 @@
     exon.by.gene.disjoint <- disjoin(exonsM)# gene name is kept
     exon.by.gene.disjoint.unlist <- unlist(exon.by.gene.disjoint ) 
     exon.bins <- exon.by.gene.disjoint.unlist[!duplicated(exon.by.gene.disjoint.unlist)] 
-    exon.gene.names <- table(exon.bins@ranges@NAMES)
+    #exon.gene.names <- table(exon.bins@ranges@NAMES)
+    #change
+    exon.gene.names<-table(factor(exon.bins@ranges@NAMES, 
+                                  levels=unique(exon.bins@ranges@NAMES)))
+########################################################
     exon.bins.num <- lapply(exon.gene.names,function(x){seq(1:x)})
     exon.bins.num <- unlist(exon.bins.num)
     exon.bins.id <- sprintf('E%03d', exon.bins.num)
@@ -90,7 +94,12 @@
     #-> it should be the same number as multiexonic genes.
     introns.by.gene@unlistData@ranges@NAMES <- NULL #delete old names
     intron.o <- unlist(introns.by.gene) #disjoint in bins
-    intron.o.gene.names <- table(intron.o@ranges@NAMES) #get vector with gene names
+    
+    #intron.o.gene.names <- table(intron.o@ranges@NAMES) #get vector with gene names
+    #change
+    intron.o.gene.names<-table(factor(intron.o@ranges@NAMES,
+                                      levels=unique(intron.o@ranges@NAMES)))    
+    
     intron.o.gene.names.repeated <- rep(names(intron.o.gene.names), intron.o.gene.names) 
     #repeat character vector by numeric vector 
     intron.o.gene.names.repeated <- as.character(intron.o.gene.names.repeated) #as character
@@ -144,6 +153,7 @@
   function(genome) 
   {
     transcripts <- transcriptsBy(genome) #extract transcripts coordinates
+    
     return(transcripts)
   }
 ########################################################
@@ -179,17 +189,24 @@
   .findASBin <-
     function(exon.bins, intron.bins, transcripts, junctions)
     {
+      
       as.bins <- findOverlaps(exon.bins, intron.bins, type=c("equal")) 
       exon.as <- rep("-", as.bins@nLnode) #vector for exons metadata
-      exon.as[as.bins@from] <- "as" #introns exons as
       intron.as <- rep("-", as.bins@nRnode) #vector for introns metadata
+      #Asign AS first
+      exon.as[as.bins@from] <- "as" #introns exons as
       intron.as[as.bins@to] <- "as" #identify introns as
-      transcripts.unlist <- unlist(transcripts) #41671  
+      
+      transcripts.unlist  <- unlist(transcripts) #41671  
       find.external.start <- findOverlaps(exon.bins, transcripts.unlist, type=c("start")) #
       find.external.end   <- findOverlaps(exon.bins, transcripts.unlist, type=c("end"))
+      
       exon.as[find.external.start@from] <- "external" #identify start exons bins
       exon.as[find.external.end@from] <- "external" #identify end exons bins
+      #Asign external second
       #add metadata 
+      #if a bin is AS and external, AS tag will be replaced by external.
+      
       mcols(intron.bins) <- append(mcols(intron.bins), DataFrame(class=intron.as)) 
       ###add introns.bins metadata
       mcols(exon.bins) <- append(mcols(exon.bins), DataFrame(class=exon.as)) 
@@ -206,17 +223,18 @@
       events <- rep("-",nrow(auxdf))
       eventsJ <- rep("-",nrow(auxdf))
       #counters, just for   check
-      IR=0
-      ES=0
-      Alt5ss=0 
-      Alt3ss=0 
-      totAS=0
-      mult=0
-      multPos=c()
-      multIR=0
-      multES=0
-      multAlt5ss=0 
-      multAlt3ss=0 
+      IR <- 0
+      ES <- 0
+      Alt5ss <- 0 
+      Alt3ss <- 0 
+      totAS <- 0
+      mult <- 0
+      multPos <- c()
+      multIR <- 0
+      multES <- 0
+      multAlt5ss <- 0 
+      multAlt3ss <- 0 
+      AsNotExternal <- sum(intron.as=="as") #5692 AS
       for (i in 1:nrow(auxdf)){  
         if  (auxdf$class[i] =="as")  {
           totAS = totAS +1  #OK
@@ -293,7 +311,8 @@
           }
         }
       }  
-      message("* Number of AS bins = ", totAS)
+      message("* Number of AS bins (not include external) =", totAS)
+      message("* Number of AS bins (include external) =", AsNotExternal)
       message("* Classified as:", "\n", 
               "\t", "ES bins = ", ES, "\t","(",round(ES/totAS*100), "%)" , "\n", 
               "\t","IR bins = " , IR,"\t","(",round(IR/totAS*100), "%)" , "\n",
@@ -309,7 +328,8 @@
       mcols(exons.introns.unique) <- append(mcols(exons.introns.unique), DataFrame(event=events))
       mcols(exons.introns.unique) <- append(mcols(exons.introns.unique), DataFrame(eventJ=eventsJ))
       ###########################################################################
-      cat("* Number of AS bins = ", totAS)
+      cat("* Number of AS bins (not include external) =", totAS)
+      cat("* Number of AS bins (include external) =", AsNotExternal)
       cat("* Classified as:", "\n", 
               "\t", "ES bins = ", ES, "\t","(",round(ES/totAS*100), "%)" , "\n", 
               "\t","IR bins = " , IR,"\t","(",round(IR/totAS*100), "%)" , "\n",

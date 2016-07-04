@@ -69,6 +69,7 @@ setMethod(
     message("* Number of extracted Exon Bins =",le)
     cat("* Number of extracted Exon Bins =")
     cat(le)
+    cat("\n")
 ##########################################################################
     intron.tot <- .createGRangesIntrons(genome, md)
     #add locus_overlap
@@ -88,6 +89,7 @@ setMethod(
     message("* Number of extracted trascripts =",lt)
     cat("* Number of extracted trascripts =")
     cat(lt)
+    cat("\n")
 ##########################################################################
     junctions <- .createGRangesJunctions(genome) 
     #add locus_overlap

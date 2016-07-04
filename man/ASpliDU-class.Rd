@@ -6,7 +6,6 @@
 \alias{genesDE,ASpliDU-method}
 \alias{junctionsDU,ASpliDU-method}
 \alias{writeDU,ASpliDU-method}
-\alias{show}
 \title{Class \code{"ASpliDU"}}
 \description{Contains results of differential expression at gene level and differential usage at bin and junction level estimation using DEreport method.
 }

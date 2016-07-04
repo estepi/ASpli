@@ -9,7 +9,6 @@
 \alias{junctionsPIR,ASpliAS-method}
 \alias{junctionsPSI,ASpliAS-method}
 \alias{writeAS,ASpliAS-method}
-\alias{show}
 \title{Class \code{"ASpliAS"}}
 \description{
 Results of PSI and PIR using experimental junctions
