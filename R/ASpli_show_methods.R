@@ -205,7 +205,7 @@ setMethod('show', 'ASpliCounts',
                 "Access using rdsb(object)", "\n")
             cat("Junction counts:", 
                 dim(object@junction.counts)[1], "junctions analysed.",
-              "Access using countsj(object)")
+              "Access using countsj(object)", "\n")
             })
 ################################################################
 setMethod('show', 'ASpliAS', 
