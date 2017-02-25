@@ -11,22 +11,27 @@
     #coordinates for genome browser
     gene_coordinates <- paste(browser,geneEnds, sep="-")
     #agrego el shareLocus
-    if (packageVersion("IRanges")<2.6) 
-      {
+    if (packageVersion("IRanges")<2.6)
+       {
         locus <- findOverlaps(exons.by.gene.disjoint, ignoreSelf=TRUE) 
         #locus by locus
-      }
+        }
     else {
         locus <- findOverlaps(exons.by.gene.disjoint, drop.self=TRUE) 
-        #locus by locus  
-    }  
-    
+        #locus by locus   
+        }  
     locus.df <- as.data.frame(locus)
-    locus.df$names <- names(exons.by.gene.disjoint[locus.df$subjectHits])
-    tt1 <- data.frame(aggregate(names ~ queryHits , data = locus.df, paste, collapse = ';'))
-    locus_overlap <- rep("-", length(exons.by.gene.disjoint))
-    locus_overlap[tt1$queryHits] <- tt1$names
-    mcols(exons.by.gene.disjoint) <- append(
+    locus_overlap <- rep("-", length(exons.by.gene.disjoint))  
+    #add a conditional 
+    if (nrow(locus.df)>0) {
+      locus.df$names <- names(exons.by.gene.disjoint[locus.df$subjectHits])
+      tt1 <- data.frame(aggregate(names ~ queryHits, 
+                                  data = locus.df, 
+                                  paste, collapse = ';'))
+      locus_overlap[tt1$queryHits] <- tt1$names
+    }
+    ##############
+        mcols(exons.by.gene.disjoint) <- append(
             mcols(exons.by.gene.disjoint), 
             DataFrame(gene_coordinates = gene_coordinates))
     mcols(exons.by.gene.disjoint) <- append(
